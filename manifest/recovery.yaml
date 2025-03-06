@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: recovery-config
+  namespace: stradvision
+data:
+  config.yaml: |
+    kafka:
+      broker:
+        - stradvision-kafka-kafka-bootstrap:9092
+      groupID: recovery-group
+      topic: event-dlq
+      rebalanceStrategy: sticky
+    
+    storage:
+      name: event-list
+      path: /var/lib/stradvision
+      maxFileCount: 5
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recovery
+  namespace: stradvision
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recovery
+  template:
+    metadata:
+      labels:
+        app: recovery
+    spec:
+      containers:
+        - name: recovery
+          image: stradvision-recovery:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: LOG_LEVEL
+              value: debug
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/stradvision
+            - name: storage-volume
+              mountPath: /var/lib/stradvision
+      volumes:
+        - name: config-volume
+          configMap:
+            name: recovery-config
+        - name: storage-volume
+          emptyDir: {}

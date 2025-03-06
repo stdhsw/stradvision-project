@@ -1,0 +1,15 @@
+kube:
+  config: ~/.kube/config
+  resync: 10
+
+kafka:
+  brokers:
+    - localhost:9092
+    - localhost:9093
+  topic: test
+  timeout: 10s
+  retry: 3
+  retryBackoff: 1
+  flushMsg: 1000
+  flushTime: 3s
+  flushByte: 1000

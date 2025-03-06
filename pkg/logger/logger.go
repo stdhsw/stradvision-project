@@ -8,8 +8,8 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func InitLogger(appName string, opts ...Option) error {
-	c := fromOptions(appName, opts...)
+func InitLogger(appName string, options ...Option) error {
+	c := fromOptions(appName, options...)
 	writer = zap.New(
 		zapcore.NewCore(
 			c.encoder,

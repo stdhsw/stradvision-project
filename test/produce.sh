@@ -1,0 +1,1 @@
+kubectl exec -it -n stradvision kcat -- kcat -P -b stradvision-kafka-kafka-bootstrap:9092 -t test-topic

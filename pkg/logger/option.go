@@ -49,17 +49,18 @@ func defaultOption() config {
 
 type Option func(*config)
 
-func fromOptions(appName string, opts ...Option) *config {
+func fromOptions(appName string, options ...Option) *config {
 	c := defaultOption()
 	c.appName = appName
 
-	for _, opt := range opts {
-		opt(&c)
+	for _, option := range options {
+		option(&c)
 	}
 
 	return &c
 }
 
+// WithPath 로그 파일 경로 설정
 func WithPath(path string) Option {
 	return func(c *config) {
 		if path != "" {
@@ -68,6 +69,7 @@ func WithPath(path string) Option {
 	}
 }
 
+// WithLogExtention 로그 파일 확장자 설정
 func WithLogMaxSize(size int) Option {
 	return func(c *config) {
 		if size > 0 {
@@ -76,6 +78,7 @@ func WithLogMaxSize(size int) Option {
 	}
 }
 
+// WithLogMaxBackups 로그 파일 백업 설정
 func WithLogMaxBackups(backups int) Option {
 	return func(c *config) {
 		if backups > 0 {
@@ -84,6 +87,7 @@ func WithLogMaxBackups(backups int) Option {
 	}
 }
 
+// WithLogMaxAge 로그 파일 보관 기간 설정
 func WithLogMaxAge(age int) Option {
 	return func(c *config) {
 		if age > 0 {
@@ -92,18 +96,21 @@ func WithLogMaxAge(age int) Option {
 	}
 }
 
+// WithLogLocalTime 로컬 시간 설정
 func WithLogLocalTime(localTime bool) Option {
 	return func(c *config) {
 		c.logger.LocalTime = localTime
 	}
 }
 
+// WithLogCompress 로그 압축 설정
 func WithLogCompress(compress bool) Option {
 	return func(c *config) {
 		c.logger.Compress = compress
 	}
 }
 
+// WithLogLevel 로그 레벨 설정
 func WithLogLevel(level string) Option {
 	return func(c *config) {
 		switch strings.ToUpper(level) {
@@ -127,6 +134,7 @@ func WithLogLevel(level string) Option {
 	}
 }
 
+// WitchEncoder 로그 인코더 설정
 func WitchEncoder(encoder string) Option {
 	return func(c *config) {
 		encoderConfig := zap.NewProductionEncoderConfig()
